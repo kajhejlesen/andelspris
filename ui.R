@@ -11,9 +11,9 @@ ui <- fluidPage(
         sidebarPanel(
             sliderInput("years_to_show",
                         "Vis år",
-                        min = 2001,
-                        max = 2022,
-                        value = c(2001, 2022),
+                        min = min_year,
+                        max = max_year,
+                        value = c(min_year, max_year),
                         sep = "",
                         ),
             checkboxInput("inflation",
@@ -28,8 +28,8 @@ ui <- fluidPage(
             conditionalPanel(condition = "input.index == 'Index'",
               sliderInput("index_years",
                         "År, index = 100",
-                        min = 2001,
-                        max = 2022,
+                        min = min_year,
+                        max = max_year,
                         value = 2010,
                         sep = "",
                         )

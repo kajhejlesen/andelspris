@@ -9,7 +9,7 @@ server <- function(input, output) {
       year       = as.numeric(stringr::str_sub(TID, 1, 4)),
       percentage = 1 + INDHOLD / 100
     ) %>%
-    add_row(year = 2001, percentage = 1) %>%
+    add_row(year = min_year, percentage = 1) %>%
     arrange(year) %>%
     mutate(
       index = cumprod(percentage),
@@ -20,7 +20,7 @@ server <- function(input, output) {
   andel_price <- read_delim("input/andel_price.csv", delim = ";", col_types = "dddd") %>%
     tidyr::pivot_longer(cols = -year, names_to = c("type")) %>%
     mutate(per_sqm = value / total_sqm) %>%
-    filter(year %in% seq(2001, 2022))
+    filter(year %in% seq(min_year, max_year))
   
   ejer_price <- read_delim("input/ejer_price.csv", delim = ";", skip = 3, na = c(" ", "", "..")) %>%
     slice(c(-1, -2)) %>%
@@ -31,7 +31,7 @@ server <- function(input, output) {
   ejer_price_2 <- ejer_price %>%
     tidyr::pivot_longer(cols = -postnummer) %>%
     mutate(year = as.numeric(str_sub(name, 1, 4))) %>% 
-    filter(year %in% seq(2001, 2022)) %>%
+    filter(year %in% seq(min_year, max_year)) %>%
     group_by(postnummer, year) %>% 
     summarize(
       per_sqm  = mean(value)
