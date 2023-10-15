@@ -9,13 +9,18 @@ server <- function(input, output) {
       year       = as.numeric(stringr::str_sub(TID, 1, 4)),
       percentage = 1 + INDHOLD / 100
     ) %>%
-    add_row(year = min_year, percentage = 1) %>%
+    add_row(year = min_year, percentage = 1) %>% 
     arrange(year) %>%
     mutate(
       index = cumprod(percentage),
-      compared_to_2022 = 1 / (index / .data$index[.data$year == max(.data$year)])
+      compared_to_last = 1 / (index / .data$index[.data$year == max(.data$year)])
     ) %>%
-    select(year, compared_to_2022)
+    select(year, compared_to_last)
+  
+  # todo: take inflation in ongoing year into account
+  if (max(inflation_dk$year) != max_year) {
+    inflation_dk <- add_row(inflation_dk, year = max_year, compared_to_last = 1)
+  }
   
   andel_price <- read_delim("input/andel_price.csv", delim = ";", col_types = "dddd") %>%
     tidyr::pivot_longer(cols = -year, names_to = c("type")) %>%
@@ -41,7 +46,7 @@ server <- function(input, output) {
     if (input$inflation) {
       ejer_price_2 <- ejer_price_2 %>%
         left_join(inflation_dk, by = "year") %>%
-        mutate(per_sqm  = per_sqm  * compared_to_2022)
+        mutate(per_sqm  = per_sqm  * compared_to_last)
     }
     
     if (input$index == "Index") {
@@ -69,7 +74,7 @@ server <- function(input, output) {
     if (input$inflation) {
       andel_price <- andel_price %>%
         left_join(inflation_dk, by = "year") %>%
-        mutate(per_sqm = per_sqm * compared_to_2022)
+        mutate(per_sqm = per_sqm * compared_to_last)
     }
     
     if (input$index == "Index") {
