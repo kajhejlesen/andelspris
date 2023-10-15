@@ -1,0 +1,13 @@
+name: andelspris
+title: andelspris
+username:
+account: kajhejlesen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8894494
+bundleId: 7353147
+url: https://kajhejlesen.shinyapps.io/andelspris/
+when: 1686910552.13694
+lastSyncTime: 1686910552.13695
+asMultiple: FALSE
+asStatic: FALSE
