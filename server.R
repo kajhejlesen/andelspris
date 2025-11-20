@@ -85,7 +85,6 @@ server <- function(input, output) {
         mutate(per_sqm = total_sqm * per_sqm)
     }
     
-
     andel_price |>
       mutate(per_sqm = round(per_sqm, 0)) |>
       filter(year %in% seq(input$years_to_show[1], input$years_to_show[2]))
