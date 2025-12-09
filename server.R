@@ -165,7 +165,7 @@ server <- function(input, output) {
         min = 0
       ) |>
       hc_caption(
-        text = "Sammenligning mellem prisudviklingen for andelsboligforeningen A/B Gl. Kalkbrænderi Vej 44-46-48 og ejerlejligheder i Kbh Ø og Nordhavn.<br>Inflation baseret på 2022 priser. Valuering dækker over ejendomsvurdering eller valuarvurdering<br><b>Kilder:</b> Boligpriser: <a href=https://rkr.statistikbank.dk>Statistikbank.dk</a>; Inflation: <a href=https://www.dst.dk/>Danmarks statistik</a>; Andelspriser: Årsrapporter/referater fra <a href=https://www.cobblestone.dk>Cobblestone</a>."
+        text = "Sammenligning mellem prisudviklingen for andelsboligforeningen A/B Gl. Kalkbrænderi Vej 44-46-48 og ejerlejligheder i Kbh Ø og Nordhavn.<br>Inflation baseret på 2022 priser. Valuering dækker over ejendomsvurdering eller valuarvurdering.<br><b>Kilder:</b> Boligpriser: <a href=https://rkr.statistikbank.dk>Statistikbank.dk</a>; Inflation: <a href=https://www.dst.dk/>Danmarks statistik</a>; Andelspriser: Årsrapporter/referater fra <a href=https://www.cobblestone.dk>Cobblestone</a>.<br><a href=https://github.com/kajhejlesen/andelspris>https://github.com/kajhejlesen/andelspris</a>"
       ) |> 
       hc_exporting(
         enabled = TRUE, # always enabled
