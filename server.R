@@ -66,7 +66,8 @@ server <- function(input, output) {
     if (input$inflation) {
       andel_price <- andel_price |>
         left_join(inflation_dk, by = "year") |>
-        mutate(per_sqm = per_sqm * index)
+        mutate(per_sqm = per_sqm * index,
+               value = value * index)
     }
     
     if (input$index == "Index") {
@@ -78,8 +79,44 @@ server <- function(input, output) {
           per_sqm = per_sqm.x / per_sqm.y * 100
         )
     } else if (input$index == "2-værelses (56 m2)") {
+      
+      # needlessly complex way to calculate the price of a single (56 m2) apartment.
+      # total 'area' is 10000 units divided with two different 'fordelingstal'
+      # this was done as a common area was absorbed by an apartment in 2011
+      locked_value <- 23846002
+      
+      
+      # First number locked by the value in 2011 when common area was absorbed      
+      fordelingstal1 <- 9831
+
+      # Second number for the price increase since
+      fordelingstal2 <- 9943.42
+
+      # Fraction out of the total area of 10000 units, listed in the old yearly reports
+      # should be equal to 10000 * 56 / 1994, but not quite, some decimals are off
+      part_56m2 <- 280.89     
+      
+      # Price is calculated based on andelskronen (max price)
+      price_per_year <- andel_price |>
+        select(-per_sqm) |> 
+        pivot_wider(names_from = type, values_from = value) |> 
+        select(year, andelskrone) |> 
+        filter(!is.na(andelskrone))
+      
+      # Finding the fraction a 56m2 apartment share of the total price and then calculating value
       andel_price <- andel_price |>
-        mutate(per_sqm = 56.667 * per_sqm)
+        left_join(price_per_year, by = "year") |> 
+        mutate(
+          formue1 = pmin(locked_value, andelskrone, na.rm = T),
+          formue2 = pmax(andelskrone - formue1, 0, na.rm = T),
+          total_fordelingstal1 = (part_56m2 / fordelingstal1) * formue1,
+          total_fordelingstal2 = (part_56m2 / fordelingstal2) * formue2,
+          fraction_of_price = (total_fordelingstal1 + total_fordelingstal2) / andelskrone,
+          per_sqm = value * fraction_of_price
+        )
+      
+      # total are within a few kr. from the numbers in the report
+      
     } else if (input$index == "Samlet") {
       andel_price <- andel_price |>
         mutate(per_sqm = total_sqm * per_sqm)
