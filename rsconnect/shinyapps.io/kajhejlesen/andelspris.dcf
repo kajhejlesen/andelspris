@@ -5,7 +5,7 @@ account: kajhejlesen
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8894494
-bundleId: 9408563
+bundleId: 11207729
 url: https://kajhejlesen.shinyapps.io/andelspris/
 asMultiple: FALSE
 asStatic: FALSE
